@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'onboarding_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(seconds: 15), () {
+    _timer = Timer(const Duration(seconds: 8), () {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,

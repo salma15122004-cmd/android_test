@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/auth_widgets.dart';
+import 'login_screen.dart';
 
 class OnboardingData {
   final String image;
@@ -65,14 +67,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _finish() {
-    // TODO: غيّري الشاشة دي لشاشة Sign up / Log in بتاعتك
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => const Scaffold(
-          body: Center(child: Text('Sign up / Log in')),
-        ),
-      ),
+        builder: (_) => const LoginScreen()),
     );
   }
 
