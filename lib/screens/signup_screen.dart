@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 import '../widgets/auth_widgets.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      // TODO: اربطي هنا مع الباك إند
+       //الربط هنا مع الباك إند
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Account created')));
     }
@@ -83,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     icon: Icons.phone_outlined,
                     controller: _phone,
                     keyboardType: TextInputType.phone,
-                    validator: requiredField),
+                    validator: phoneField),
                 const SizedBox(height: 12),
                 CustomTextField(
                     hint: 'Password',
@@ -98,7 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _confirm,
                   isPassword: true,
                   validator: (v) =>
-                  v != _password.text ? 'Passwords do not match' : null,
+                      v != _password.text ? 'Passwords do not match' : null,
                 ),
                 const SizedBox(height: 20),
                 PrimaryButton(label: 'Sign Up', onPressed: _submit),

@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
-
-// الألوان
-const navy = Color(0xFF163A7A);
-const teal = Color(0xFF2E9CCA);
-const blue = Color(0xFF1E90FF);
-const lightBorder = Color(0xFFBFDDF2);
+import '../constants/app_colors.dart';
 
 // التحققات (validators)
 String? requiredField(String? v) =>
     (v == null || v.trim().isEmpty) ? 'This field is required' : null;
 
+final _emailRegExp = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]{2,}$');
+
 String? emailField(String? v) =>
-    (v == null || !v.contains('@') || !v.contains('.'))
+    (v == null || !_emailRegExp.hasMatch(v.trim()))
         ? 'Enter a valid email'
         : null;
 
 String? passwordField(String? v) =>
     (v == null || v.length < 6) ? 'At least 6 characters' : null;
+
+// رقم التليفون: أرقام فقط (مع + اختيارية في الأول) بطول 8 إلى 15
+final _phoneRegExp = RegExp(r'^\+?[0-9]{8,15}$');
+
+String? phoneField(String? v) {
+  final value = v?.replaceAll(RegExp(r'[\s-]'), '') ?? '';
+  if (value.isEmpty) return 'This field is required';
+  return _phoneRegExp.hasMatch(value) ? null : 'Enter a valid phone number';
+}
 
 // اللوجو + الجملة
 class AuthHeader extends StatelessWidget {
@@ -167,12 +173,16 @@ class BottomLink extends StatelessWidget {
       children: [
         Text(text, style: const TextStyle(color: Colors.grey, fontSize: 13)),
         const SizedBox(width: 6),
-        GestureDetector(
+        InkWell(
           onTap: onTap,
-          child: Text(
-            action,
-            style: const TextStyle(
-                color: blue, fontWeight: FontWeight.bold, fontSize: 13),
+          borderRadius: BorderRadius.circular(4),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+            child: Text(
+              action,
+              style: const TextStyle(
+                  color: blue, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
           ),
         ),
       ],

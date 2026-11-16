@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../constants/app_colors.dart';
+import '../services/prefs_service.dart';
 import '../widgets/auth_widgets.dart';
 import 'signup_screen.dart';
 
@@ -13,14 +16,35 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
-  bool _remember = true;
+  bool _remember = false;
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: اربطي هنا مع الباك إند
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Signed in')));
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loadRemembered();
+  }
+
+  // نرجّع الإيميل المحفوظ لو المستخدم كان مفعّل Remember me
+  Future<void> _loadRemembered() async {
+    final remember = await PrefsService.getRemember();
+    final email = await PrefsService.getSavedEmail();
+    if (!mounted) return;
+    setState(() {
+      _remember = remember;
+      _email.text = email;
+    });
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    await PrefsService.saveRemember(
+      remember: _remember,
+      email: _email.text.trim(),
+    );
+    if (!mounted) return;
+    // اربط هنا مع الباك إند
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Signed in')));
   }
 
   @override
@@ -76,7 +100,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text('Remember me', style: TextStyle(fontSize: 13)),
                     const Spacer(),
                     TextButton(
-                      onPressed: () {}, // TODO: نسيت كلمة المرور
+                      onPressed: () {
+                        // شاشة نسيت كلمة المرور
+                      },
                       child: const Text('Forgot Password?',
                           style: TextStyle(color: blue, fontSize: 12)),
                     ),

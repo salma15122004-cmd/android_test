@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_widgets.dart';
+
+import '../constants/app_colors.dart';
+import '../services/prefs_service.dart';
 import 'login_screen.dart';
 
 class OnboardingData {
@@ -24,10 +26,6 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  static const Color navy = Color(0xFF163A7A);
-  static const Color teal = Color(0xFF2E9CCA);
-  static const Color lightBlue = Color(0xFFE8F3FB);
-
   final PageController _controller = PageController();
   int _currentPage = 0;
 
@@ -66,11 +64,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  void _finish() {
+  Future<void> _finish() async {
+    // نحفظ إن المستخدم شاف الـ onboarding علشان ما يظهرش تاني
+    await PrefsService.setOnboardingSeen();
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
@@ -148,7 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 color: lightBlue,
                 borderRadius: const BorderRadius.only(topRight: Radius.circular(90)),
                 border: Border.all(
-                  color:  const Color(0xFF163A7A).withValues(alpha: 0.35),
+                  color: navy.withValues(alpha: 0.35),
                   width: 2,
                 ),
               boxShadow:[
