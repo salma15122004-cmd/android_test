@@ -64,11 +64,11 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets_img/logo.png"
+  image_path: "assets_icon/app_icon.jpg"
   adaptive_icon_background: "#FFFFFF" # ضع هنا كود لون الخلفية المناسب للوجو
-  adaptive_icon_foreground: "assets_icon/app_icon_foreground.png"
+  adaptive_icon_foreground: "assets_icon/app_icon_foreground.jpg"
   # هذه الخاصية تتحكم في الهوامش الداخلية للأيقونة (القيمة الافتراضية 16، تقليلها يكبر اللوجو)
-  adaptive_icon_foreground_inset: 13
+  adaptive_icon_foreground_inset: 8
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
