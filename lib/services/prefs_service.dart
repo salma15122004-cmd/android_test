@@ -1,10 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// كل التعامل مع shared_preferences في مكان واحد.
-class PrefsService {
-  static const _onboardingSeenKey = 'onboarding_seen';
-  static const _rememberKey = 'remember_me';
-  static const _savedEmailKey = 'saved_email';
+/// Small wrapper around `shared_preferences` for the values the app stores.
+abstract final class PrefsService {
+  static const String _onboardingSeenKey = 'onboarding_seen';
+  static const String _rememberKey = 'remember_me';
+  static const String _savedEmailKey = 'saved_email';
 
   static Future<bool> isOnboardingSeen() async {
     final prefs = await SharedPreferences.getInstance();
@@ -26,7 +26,8 @@ class PrefsService {
     return prefs.getString(_savedEmailKey) ?? '';
   }
 
-  /// نحفظ الإيميل فقط لو Remember me مفعّل. الباسورد لا يتخزن هنا أبدًا.
+  /// Stores the email only when [remember] is true. The password is never
+  /// stored here.
   static Future<void> saveRemember({
     required bool remember,
     required String email,

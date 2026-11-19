@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
+import '../services/service_locator.dart';
+import '../utils/guarded_action.dart';
+import '../utils/validators.dart';
+import '../widgets/app_buttons.dart';
+import '../widgets/app_snack_bar.dart';
 import '../widgets/auth_widgets.dart';
+import '../widgets/custom_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -9,29 +16,42 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> with GuardedActionMixin {
   final _formKey = GlobalKey<FormState>();
   final _firstName = TextEditingController();
   final _secondName = TextEditingController();
   final _email = TextEditingController();
   final _phone = TextEditingController();
   final _password = TextEditingController();
-  final _confirm = TextEditingController();
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-       //الربط هنا مع الباك إند
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Account created')));
-    }
-  }
+  final _confirmPassword = TextEditingController();
 
   @override
   void dispose() {
-    for (final c in [_firstName, _secondName, _email, _phone, _password, _confirm]) {
-      c.dispose();
-    }
+    _firstName.dispose();
+    _secondName.dispose();
+    _email.dispose();
+    _phone.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
     super.dispose();
+  }
+
+  Future<void> _signUp() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final created = await runGuarded(
+      () => authService.signUp(
+        firstName: _firstName.text.trim(),
+        secondName: _secondName.text.trim(),
+        email: _email.text.trim(),
+        phone: _phone.text.trim(),
+        password: _password.text,
+      ),
+    );
+    if (!created || !mounted) return;
+
+    showAppSnackBar(context, 'Account created. Please sign in.');
+    Navigator.pop(context);
   }
 
   @override
@@ -53,56 +73,74 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const Center(child: AuthHeader()),
                 const SizedBox(height: 16),
-                const Text('Create Your Account',
-                    style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold, color: navy)),
                 const Text(
-                    "Join Bright Step and be part of your child's progress journey.",
-                    style: TextStyle(color: blue, fontWeight: FontWeight.w600)),
+                  'Create Your Account',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
+                const Text(
+                  "Join Bright Steps and be part of your child's progress "
+                  'journey.',
+                  style: TextStyle(
+                    color: AppColors.blue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 CustomTextField(
-                    hint: 'First Name',
-                    icon: Icons.person_outline,
-                    controller: _firstName,
-                    validator: requiredField),
+                  hint: 'First Name',
+                  icon: Icons.person_outline,
+                  controller: _firstName,
+                  validator: Validators.requiredField,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Second Name',
-                    icon: Icons.person_outline,
-                    controller: _secondName,
-                    validator: requiredField),
+                  hint: 'Second Name',
+                  icon: Icons.person_outline,
+                  controller: _secondName,
+                  validator: Validators.requiredField,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Email Address',
-                    icon: Icons.email_outlined,
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: emailField),
+                  hint: 'Email Address',
+                  icon: Icons.email_outlined,
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: Validators.email,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Phone Number',
-                    icon: Icons.phone_outlined,
-                    controller: _phone,
-                    keyboardType: TextInputType.phone,
-                    validator: phoneField),
+                  hint: 'Phone Number',
+                  icon: Icons.phone_outlined,
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
+                  validator: Validators.phone,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Password',
-                    icon: Icons.lock_outline,
-                    controller: _password,
-                    isPassword: true,
-                    validator: passwordField),
+                  hint: 'Password',
+                  icon: Icons.lock_outline,
+                  controller: _password,
+                  isPassword: true,
+                  validator: Validators.password,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
                   hint: 'Confirm Password',
                   icon: Icons.lock_outline,
-                  controller: _confirm,
+                  controller: _confirmPassword,
                   isPassword: true,
-                  validator: (v) =>
-                      v != _password.text ? 'Passwords do not match' : null,
+                  validator: Validators.confirmPassword(() => _password.text),
                 ),
                 const SizedBox(height: 20),
-                PrimaryButton(label: 'Sign Up', onPressed: _submit),
+                PrimaryButton(
+                  label: 'Sign Up',
+                  isLoading: isBusy,
+                  onPressed: _signUp,
+                ),
                 const SizedBox(height: 12),
                 const OrDivider(),
                 const SizedBox(height: 8),

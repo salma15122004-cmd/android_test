@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 import '../services/prefs_service.dart';
+import '../services/service_locator.dart';
+import '../utils/guarded_action.dart';
+import '../utils/validators.dart';
+import '../widgets/app_buttons.dart';
+import '../widgets/app_snack_bar.dart';
 import '../widgets/auth_widgets.dart';
+import '../widgets/custom_text_field.dart';
+import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,7 +19,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with GuardedActionMixin {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -21,11 +28,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _loadRemembered();
+    _loadRememberedEmail();
   }
 
-  // نرجّع الإيميل المحفوظ لو المستخدم كان مفعّل Remember me
-  Future<void> _loadRemembered() async {
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  /// Restores the email saved by "Remember me", if any.
+  Future<void> _loadRememberedEmail() async {
     final remember = await PrefsService.getRemember();
     final email = await PrefsService.getSavedEmail();
     if (!mounted) return;
@@ -35,23 +49,34 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future<void> _submit() async {
+  Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
-    await PrefsService.saveRemember(
-      remember: _remember,
-      email: _email.text.trim(),
+    final email = _email.text.trim();
+    final password = _password.text;
+
+    final signedIn = await runGuarded(
+      () => authService.signIn(email: email, password: password),
     );
+    if (!signedIn) return;
+
+    await PrefsService.saveRemember(remember: _remember, email: email);
     if (!mounted) return;
-    // اربط هنا مع الباك إند
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Signed in')));
+    // Navigate to the home screen here once it exists.
+    showAppSnackBar(context, 'Signed in');
   }
 
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
+  void _openForgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+    );
+  }
+
+  void _openSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SignUpScreen()),
+    );
   }
 
   @override
@@ -69,18 +94,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 const Center(child: AuthHeader()),
                 const SizedBox(height: 24),
-                const Text('Welcome Back',
-                    style: TextStyle(
-                        fontSize: 26, fontWeight: FontWeight.bold, color: navy)),
-                const Text("Log in to continue your child's journey",
-                    style: TextStyle(color: blue, fontWeight: FontWeight.w600)),
+                const Text(
+                  'Welcome Back',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.navy,
+                  ),
+                ),
+                const Text(
+                  "Log in to continue your child's journey",
+                  style: TextStyle(
+                    color: AppColors.blue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 CustomTextField(
                   hint: 'Email Address',
                   icon: Icons.email_outlined,
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
-                  validator: emailField,
+                  validator: Validators.email,
                 ),
                 const SizedBox(height: 12),
                 CustomTextField(
@@ -88,38 +123,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   icon: Icons.lock_outline,
                   controller: _password,
                   isPassword: true,
-                  validator: passwordField,
+                  validator: Validators.password,
                 ),
                 Row(
                   children: [
                     Checkbox(
                       value: _remember,
-                      activeColor: blue,
-                      onChanged: (v) => setState(() => _remember = v!),
+                      activeColor: AppColors.blue,
+                      onChanged: (value) =>
+                          setState(() => _remember = value ?? false),
                     ),
                     const Text('Remember me', style: TextStyle(fontSize: 13)),
                     const Spacer(),
                     TextButton(
-                      onPressed: () {
-                        // شاشة نسيت كلمة المرور
-                      },
-                      child: const Text('Forgot Password?',
-                          style: TextStyle(color: blue, fontSize: 12)),
+                      onPressed: _openForgotPassword,
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: AppColors.blue, fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                PrimaryButton(label: 'Sign In', onPressed: _submit),
+                PrimaryButton(
+                  label: 'Sign In',
+                  isLoading: isBusy,
+                  onPressed: _signIn,
+                ),
                 const SizedBox(height: 12),
                 const OrDivider(),
                 const SizedBox(height: 8),
                 BottomLink(
                   text: "Don't have an account?",
                   action: 'Sign Up',
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  ),
+                  onTap: _openSignUp,
                 ),
               ],
             ),
