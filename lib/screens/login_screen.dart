@@ -5,7 +5,6 @@ import '../services/service_locator.dart';
 import '../utils/guarded_action.dart';
 import '../utils/validators.dart';
 import '../widgets/app_buttons.dart';
-import '../widgets/app_snack_bar.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/custom_text_field.dart';
 import 'forgot_password_screen.dart';
@@ -61,15 +60,11 @@ class _LoginScreenState extends State<LoginScreen> with GuardedActionMixin {
 
     await PrefsService.saveRemember(remember: _remember, email: email);
     if (!mounted) return;
-    // اربط هنا مع الباك إند
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Signed in')));
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => KidsProfileScreen(),
-    //   ),
-    // );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const KidsProfileScreen()),
+      (route) => false,
+    );
   }
 
   void _openForgotPassword() {

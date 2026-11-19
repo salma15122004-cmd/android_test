@@ -54,6 +54,21 @@ Until then `MockAuthService` is used. It accepts any sign in and sign up, and
 the only valid verification code is `1234`. The code is also printed to the
 debug console when it is requested.
 
+## Child profile storage
+
+`KidsProfileScreen` saves a validated `ChildProfile` through the
+`ChildProfileService` contract. The default `LocalChildProfileService` stores
+the profile as JSON in `SharedPreferences`, so the screen works immediately
+without a server.
+
+To connect the real backend/database:
+
+1. Implement `ChildProfileService` with the required API or database SDK.
+2. Replace `childProfileService = LocalChildProfileService()` in
+   `lib/services/service_locator.dart`.
+3. Keep the Arabic connection comments in `KidsProfileScreen` as markers for
+   the upload and image-picker integration points.
+
 ## Onboarding
 
 Release builds show the onboarding only on the first launch. Debug builds

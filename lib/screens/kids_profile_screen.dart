@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../models/child_profile.dart';
+import '../services/service_locator.dart';
+import '../utils/guarded_action.dart';
+import '../widgets/app_snack_bar.dart';
 
 class KidsProfileScreen extends StatefulWidget {
   const KidsProfileScreen({super.key});
@@ -9,7 +13,8 @@ class KidsProfileScreen extends StatefulWidget {
   State<KidsProfileScreen> createState() => _KidsProfileScreenState();
 }
 
-class _KidsProfileScreenState extends State<KidsProfileScreen> {
+class _KidsProfileScreenState extends State<KidsProfileScreen>
+    with GuardedActionMixin {
   final _nameController = TextEditingController();
   DateTime? _birthDate;
   String? _gender;
@@ -35,15 +40,27 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
     if (picked != null) setState(() => _birthDate = picked);
   }
 
-  void _continue() {
+  Future<void> _continue() async {
     if (_nameController.text.trim().isEmpty ||
         _birthDate == null ||
         _gender == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      showAppSnackBar(context, 'Please fill all fields');
       return;
     }
+
+    final profile = ChildProfile(
+      name: _nameController.text.trim(),
+      birthDate: _birthDate!,
+      gender: _gender!,
+      avatarAsset: _avatars[_selectedAvatar],
+    );
+
+    // نقطة الاتصال مع قاعدة البيانات/الـ API: غيّر التنفيذ في service_locator.dart.
+    final saved = await runGuarded(
+      () => childProfileService.saveProfile(profile),
+    );
+    if (!saved || !mounted) return;
+    showAppSnackBar(context, 'Child profile saved successfully.');
   }
 
   @override
@@ -105,7 +122,8 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                     right: 0,
                     child: GestureDetector(
                       onTap: () {
-                        // TODO: اختيار صورة من المعرض (محتاج حزمة image_picker)
+                        // نقطة ربط اختيار صورة من المعرض: أضف image_picker ثم خزّن
+                        // رابط الصورة في ChildProfile بدل asset المحلي.
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
@@ -276,26 +294,35 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                       width: 260,
                       height: 46,
                       child: ElevatedButton(
-                        onPressed: _continue,
+                        onPressed: isBusy ? null : _continue,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.navy,
                           foregroundColor: Colors.white,
                           shape: const StadiumBorder(),
                         ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Continue',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        child: isBusy
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward, size: 18),
+                                ],
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            Icon(Icons.arrow_forward, size: 18),
-                          ],
-                        ),
                       ),
                     ),
                   ],
