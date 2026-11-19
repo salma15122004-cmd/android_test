@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constants/app_colors.dart';
 import '../services/prefs_service.dart';
 import '../services/service_locator.dart';
@@ -11,6 +10,7 @@ import '../widgets/auth_widgets.dart';
 import '../widgets/custom_text_field.dart';
 import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
+import 'kids_profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -61,8 +61,15 @@ class _LoginScreenState extends State<LoginScreen> with GuardedActionMixin {
 
     await PrefsService.saveRemember(remember: _remember, email: email);
     if (!mounted) return;
-    // Navigate to the home screen here once it exists.
-    showAppSnackBar(context, 'Signed in');
+    // اربط هنا مع الباك إند
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Signed in')));
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => KidsProfileScreen(),
+    //   ),
+    // );
   }
 
   void _openForgotPassword() {
