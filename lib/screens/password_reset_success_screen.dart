@@ -7,7 +7,8 @@ import 'login_screen.dart';
 
 /// Confirmation shown after the password was changed.
 class PasswordResetSuccessScreen extends StatelessWidget {
-  const PasswordResetSuc
+  const PasswordResetSuccessScreen({super.key});
+
   void _goToSignIn(BuildContext context) {
     // Clear the whole reset flow so the back button cannot return to it.
     Navigator.pushAndRemoveUntil(

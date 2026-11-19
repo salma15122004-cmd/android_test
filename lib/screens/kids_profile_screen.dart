@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 
 class KidsProfileScreen extends StatefulWidget {
@@ -38,12 +39,11 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
     if (_nameController.text.trim().isEmpty ||
         _birthDate == null ||
         _gender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
       return;
     }
-
   }
 
   @override
@@ -67,7 +67,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: navy),
+                      icon: const Icon(Icons.arrow_back, color: AppColors.navy),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -76,7 +76,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: navy,
+                      color: AppColors.navy,
                     ),
                   ),
                 ],
@@ -94,8 +94,10 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                       color: Color(0xFFDCEBFA),
                     ),
                     child: ClipOval(
-                      child: Image.asset(_avatars[_selectedAvatar],
-                          fit: BoxFit.cover),
+                      child: Image.asset(
+                        _avatars[_selectedAvatar],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -108,11 +110,14 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: blue,
+                          color: AppColors.blue,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.camera_alt,
-                            color: Colors.white, size: 20),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ),
@@ -131,7 +136,9 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                       label: 'Full Name',
                       child: TextField(
                         controller: _nameController,
-                        decoration: const InputDecoration(border: InputBorder.none),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                     _FieldRow(
@@ -150,15 +157,18 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                                     : '${_birthDate!.day}/${_birthDate!.month}/${_birthDate!.year}',
                               ),
                             ),
-                            const Icon(Icons.calendar_month,
-                                color: Colors.grey, size: 22),
+                            const Icon(
+                              Icons.calendar_month,
+                              color: Colors.grey,
+                              size: 22,
+                            ),
                           ],
                         ),
                       ),
                     ),
                     _FieldRow(
                       icon: Icons.transgender,
-                      iconColor: blue,
+                      iconColor: AppColors.blue,
                       label: 'Gender',
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
@@ -166,8 +176,14 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                           isExpanded: true,
                           icon: const Icon(Icons.keyboard_arrow_down),
                           items: const [
-                            DropdownMenuItem(value: 'Male', child: Text('Male')),
-                            DropdownMenuItem(value: 'Female', child: Text('Female')),
+                            DropdownMenuItem(
+                              value: 'Male',
+                              child: Text('Male'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Female',
+                              child: Text('Female'),
+                            ),
                           ],
                           onChanged: (v) => setState(() => _gender = v),
                         ),
@@ -189,16 +205,18 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                   children: [
                     const Row(
                       children: [
-                        Expanded(child: Divider(color: navy)),
+                        Expanded(child: Divider(color: AppColors.navy)),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
                             'Choose Your account picture',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: navy),
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
+                            ),
                           ),
                         ),
-                        Expanded(child: Divider(color: navy)),
+                        Expanded(child: Divider(color: AppColors.navy)),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -219,26 +237,34 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                                   shape: BoxShape.circle,
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: selected ? blue : Colors.transparent,
+                                    color: selected
+                                        ? AppColors.blue
+                                        : Colors.transparent,
                                     width: 2,
                                   ),
                                   boxShadow: const [
                                     BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 6,
-                                        offset: Offset(0, 3)),
+                                      color: Colors.black12,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 3),
+                                    ),
                                   ],
                                 ),
                                 child: ClipOval(
-                                  child: Image.asset(_avatars[i],
-                                      fit: BoxFit.cover),
+                                  child: Image.asset(
+                                    _avatars[i],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               if (selected)
                                 const Positioned(
                                   top: 0,
                                   right: 0,
-                                  child: Icon(Icons.check, color: navy),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: AppColors.navy,
+                                  ),
                                 ),
                             ],
                           ),
@@ -252,16 +278,20 @@ class _KidsProfileScreenState extends State<KidsProfileScreen> {
                       child: ElevatedButton(
                         onPressed: _continue,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: navy,
+                          backgroundColor: AppColors.navy,
                           foregroundColor: Colors.white,
                           shape: const StadiumBorder(),
                         ),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Continue',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(
+                              'Continue',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             SizedBox(width: 8),
                             Icon(Icons.arrow_forward, size: 18),
                           ],
