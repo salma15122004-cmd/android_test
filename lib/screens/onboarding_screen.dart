@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constants/app_colors.dart';
 import '../services/prefs_service.dart';
 import 'login_screen.dart';

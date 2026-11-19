@@ -67,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     validator: requiredField),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Second Name',
+                    hint: 'Last Name',
                     icon: Icons.person_outline,
                     controller: _secondName,
                     validator: requiredField),

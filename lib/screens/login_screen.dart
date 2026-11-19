@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import '../constants/app_colors.dart';
 import '../services/prefs_service.dart';
 import '../widgets/auth_widgets.dart';
 import 'signup_screen.dart';
+import 'kids_profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,6 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
     // اربط هنا مع الباك إند
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Signed in')));
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => KidsProfileScreen(),
+    //   ),
+    // );
   }
 
   @override
