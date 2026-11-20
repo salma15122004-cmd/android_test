@@ -221,16 +221,22 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
                 ),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Expanded(child: Divider(color: AppColors.navy)),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            'Choose Your account picture',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.navy,
+                          child: SizedBox(
+                            width: 190,
+                            child: Text(
+                              'Choose Your account picture',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.navy,
+                              ),
                             ),
                           ),
                         ),
@@ -374,7 +380,13 @@ class _FieldRow extends StatelessWidget {
                 children: [
                   Icon(icon, color: iconColor),
                   const SizedBox(width: 12),
-                  Text(label),
+                  Expanded(
+                    child: Text(
+                      label,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
                 ],
               ),
             ),

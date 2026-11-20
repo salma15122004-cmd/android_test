@@ -1,6 +1,7 @@
 import 'package:android_test/main.dart';
 import 'package:android_test/screens/create_new_password_screen.dart';
 import 'package:android_test/screens/forgot_password_screen.dart';
+import 'package:android_test/screens/kids_profile_screen.dart';
 import 'package:android_test/screens/login_screen.dart';
 import 'package:android_test/screens/onboarding_screen.dart';
 import 'package:android_test/screens/password_reset_success_screen.dart';
@@ -108,6 +109,18 @@ void main() {
       await _tap(tester, find.text('Sign Up'));
 
       expect(find.byType(SignUpScreen), findsOneWidget);
+    });
+
+    testWidgets('opens the kids profile screen after sign in', (
+      WidgetTester tester,
+    ) async {
+      await _pumpScreen(tester, const LoginScreen());
+
+      await tester.enterText(find.byType(TextFormField).at(0), _email);
+      await tester.enterText(find.byType(TextFormField).at(1), 'abcdef');
+      await _tap(tester, find.text('Sign In'));
+
+      expect(find.byType(KidsProfileScreen), findsOneWidget);
     });
   });
 
