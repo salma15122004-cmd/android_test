@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 /// Brand colors used across the app.
 abstract final class AppColors {
   static const Color navy = Color(0xFF163A7A);
@@ -19,3 +18,7 @@ abstract final class AppColors {
   static const Color successDark = Color(0xFF08861F);
   static const Color successRing = Color(0xFF7BE08F);
 }
+
+// الألوان الموحدة للتطبيق (مكان واحد للتعديل)
+
+
