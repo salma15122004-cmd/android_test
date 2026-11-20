@@ -57,11 +57,14 @@ class BottomLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    // A Wrap moves the action to a second line on narrow screens or with
+    // large system fonts, instead of overflowing.
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 6,
       children: [
         Text(text, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-        const SizedBox(width: 6),
         InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(4),

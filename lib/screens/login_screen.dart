@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 import '../services/prefs_service.dart';
 import '../services/service_locator.dart';
 import '../utils/guarded_action.dart';
 import '../utils/validators.dart';
 import '../widgets/app_buttons.dart';
+import '../widgets/app_snack_bar.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/custom_text_field.dart';
 import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
-import 'kids_profile_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -60,11 +61,8 @@ class _LoginScreenState extends State<LoginScreen> with GuardedActionMixin {
 
     await PrefsService.saveRemember(remember: _remember, email: email);
     if (!mounted) return;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const KidsProfileScreen()),
-      (route) => false,
-    );
+    // Navigate to the home screen here once it exists.
+    showAppSnackBar(context, 'Signed in');
   }
 
   void _openForgotPassword() {
@@ -135,8 +133,13 @@ class _LoginScreenState extends State<LoginScreen> with GuardedActionMixin {
                       onChanged: (value) =>
                           setState(() => _remember = value ?? false),
                     ),
-                    const Text('Remember me', style: TextStyle(fontSize: 13)),
-                    const Spacer(),
+                    const Expanded(
+                      child: Text(
+                        'Remember me',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
                     TextButton(
                       onPressed: _openForgotPassword,
                       child: const Text(

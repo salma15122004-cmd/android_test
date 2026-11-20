@@ -98,10 +98,11 @@ class _SignUpScreenState extends State<SignUpScreen> with GuardedActionMixin {
                 ),
                 const SizedBox(height: 12),
                 CustomTextField(
-                    hint: 'Last Name',
-                    icon: Icons.person_outline,
-                    controller: _secondName,
-                    validator: Validators.requiredField),
+                  hint: 'Last Name',
+                  icon: Icons.person_outline,
+                  controller: _secondName,
+                  validator: Validators.requiredField,
+                ),
                 const SizedBox(height: 12),
                 CustomTextField(
                   hint: 'Email Address',
