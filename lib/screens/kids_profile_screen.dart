@@ -4,7 +4,7 @@ import '../models/child_profile.dart';
 import '../services/service_locator.dart';
 import '../utils/guarded_action.dart';
 import '../widgets/app_snack_bar.dart';
-
+import 'home_screen.dart';
 class KidsProfileScreen extends StatefulWidget {
   const KidsProfileScreen({super.key});
 
@@ -17,7 +17,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
   final _nameController = TextEditingController();
   DateTime? _birthDate;
   String? _gender;
-  int _selectedAvatar = 2; // الولد هو المختار في البداية
+  int _selectedAvatar = 2;
 
   final List<String> _avatars = [
     'assets_img/img.1.png',
@@ -54,12 +54,18 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
       avatarAsset: _avatars[_selectedAvatar],
     );
 
-    // نقطة الاتصال مع قاعدة البيانات/الـ API: غيّر التنفيذ في service_locator.dart.
     final saved = await runGuarded(
       () => childProfileService.saveProfile(profile),
     );
     if (!saved || !mounted) return;
     showAppSnackBar(context, 'Child profile saved successfully.');
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
   }
 
   @override
@@ -99,7 +105,6 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
               ),
               const SizedBox(height: 8),
 
-              // الصورة الكبيرة مع زرار الكاميرا
               Stack(
                 children: [
                   Container(
@@ -121,8 +126,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
                     right: 0,
                     child: GestureDetector(
                       onTap: () {
-                        // نقطة ربط اختيار صورة من المعرض: أضف image_picker ثم خزّن
-                        // رابط الصورة في ChildProfile بدل asset المحلي.
+
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
