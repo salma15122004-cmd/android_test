@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/home_card.dart';
 import '../widgets/quick_link_item.dart';
+import 'kids_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,13 +17,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int _tab = 0;
 
   // هنبقا نضيف ontap لكل شاشة موجودة في الهوم لما نعملهم
-  final List<HomeItem> _items = const [
+  late final List<HomeItem> _items = [
     HomeItem(
       title: "Child's Profile",
       subtitle: "Track the child's condition and development",
       image: 'assets_img/img.1.png',
       color: cardBlue,
       circleImage: true,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const KidsProfileScreen()),
+        );
+      },
     ),
     HomeItem(
       title: 'Doctors',
@@ -40,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       title: "Child's Assessment",
       subtitle: "Easily assess your child's skills",
       image: 'assets_img/list.png',
-      secondimage:'assets_img/boy.assest.png',
+      secondimage: 'assets_img/boy.assest.png',
       color: lightGray,
     ),
   ];
@@ -84,12 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: _items.length,
                           gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.82,
-                          ),
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 0.82,
+                              ),
                           itemBuilder: (_, i) => HomeCard(item: _items[i]),
                         ),
                       ],
@@ -102,10 +110,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      QuickLinkItem(icon: Icons.info_outline, label: 'About Us'),
+                      QuickLinkItem(
+                        icon: Icons.info_outline,
+                        label: 'About Us',
+                      ),
                       QuickLinkItem(icon: Icons.star, label: 'Favorites'),
-                      QuickLinkItem(icon: Icons.article, label: 'Useful Articles'),
-                      QuickLinkItem(icon: Icons.headset_mic, label: 'Contact Us'),
+                      QuickLinkItem(
+                        icon: Icons.article,
+                        label: 'Useful Articles',
+                      ),
+                      QuickLinkItem(
+                        icon: Icons.headset_mic,
+                        label: 'Contact Us',
+                      ),
                     ],
                   ),
                 ],
@@ -122,7 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
 // ---------------- الهيدر ----------------
 class _HomeHeader extends StatelessWidget {
   const _HomeHeader();
@@ -131,9 +147,7 @@ class _HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(22),
-        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(22)),
         boxShadow: [
           BoxShadow(
             color: shadow.withValues(alpha: 0.18),
@@ -144,9 +158,7 @@ class _HomeHeader extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(22),
-        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(22)),
         child: Container(
           color: cardBlue,
           child: SafeArea(
@@ -219,7 +231,6 @@ class _HomeHeader extends StatelessWidget {
   }
 }
 
-
 // ---------------- شريط البحث ----------------
 class _HomeSearchBar extends StatelessWidget {
   const _HomeSearchBar();
@@ -254,19 +265,19 @@ class _HomeBanner extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFEDEBFA),
-                Color(0xFFF2F0FA),
-                Color(0xFFF8F7FC),
-                Colors.white,
-              ],
-              stops: [0.0, 0.45, 0.75, 1.0],
-            ),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFEDEBFA),
+              Color(0xFFF2F0FA),
+              Color(0xFFF8F7FC),
+              Colors.white,
+            ],
+            stops: [0.0, 0.45, 0.75, 1.0],
           ),
+        ),
         child: Row(
           children: [
             // الصورة بتتلاشى ناحية اليمين

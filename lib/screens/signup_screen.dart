@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import '../services/prefs_service.dart';
 import '../services/service_locator.dart';
 import '../utils/guarded_action.dart';
 import '../utils/validators.dart';
@@ -50,6 +51,10 @@ class _SignUpScreenState extends State<SignUpScreen> with GuardedActionMixin {
     );
     if (!created || !mounted) return;
 
+    await PrefsService.saveAccountName(
+      '${_firstName.text.trim()} ${_secondName.text.trim()}'.trim(),
+    );
+    if (!mounted) return;
     showAppSnackBar(context, 'Account created. Please sign in.');
     Navigator.pop(context);
   }

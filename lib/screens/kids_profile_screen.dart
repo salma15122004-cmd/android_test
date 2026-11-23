@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../constants/app_colors.dart';
 import '../models/child_profile.dart';
+import '../services/prefs_service.dart';
 import '../services/service_locator.dart';
 import '../utils/guarded_action.dart';
 import '../widgets/app_snack_bar.dart';
 import 'home_screen.dart';
+
 class KidsProfileScreen extends StatefulWidget {
   const KidsProfileScreen({super.key});
 
@@ -18,6 +24,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
   DateTime? _birthDate;
   String? _gender;
   int _selectedAvatar = 2;
+  String? _customPhotoPath;
 
   final List<String> _avatars = [
     'assets_img/img.1.png',
@@ -27,6 +34,76 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
     'assets_img/img.5.png',
     'assets_img/img.6.png',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final profile = await childProfileService.getProfile();
+    if (!mounted) return;
+
+    if (profile != null) {
+      setState(() {
+        _nameController.text = profile.name;
+        _birthDate = profile.birthDate;
+        _gender = profile.gender;
+        final avatarIndex = _avatars.indexOf(profile.avatarAsset);
+        if (avatarIndex >= 0) {
+          _selectedAvatar = avatarIndex;
+        } else {
+          _customPhotoPath = profile.avatarAsset;
+        }
+      });
+      return;
+    }
+
+    final accountName = await PrefsService.getAccountName();
+    if (!mounted || accountName.isEmpty) return;
+    setState(() => _nameController.text = accountName);
+  }
+
+  Future<void> _pickPhoto(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 85,
+      maxWidth: 1200,
+    );
+    if (picked == null || !mounted) return;
+    setState(() => _customPhotoPath = picked.path);
+  }
+
+  Future<void> _showPhotoOptions() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Take a selfie'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickPhoto(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from gallery'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _pickPhoto(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
@@ -51,7 +128,7 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
       name: _nameController.text.trim(),
       birthDate: _birthDate!,
       gender: _gender!,
-      avatarAsset: _avatars[_selectedAvatar],
+      avatarAsset: _customPhotoPath ?? _avatars[_selectedAvatar],
     );
 
     final saved = await runGuarded(
@@ -60,11 +137,10 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
     if (!saved || !mounted) return;
     showAppSnackBar(context, 'Child profile saved successfully.');
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+      (route) => false,
     );
   }
 
@@ -90,7 +166,15 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: AppColors.navy),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
                     ),
                   ),
                   const Text(
@@ -115,19 +199,22 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
                       color: Color(0xFFDCEBFA),
                     ),
                     child: ClipOval(
-                      child: Image.asset(
-                        _avatars[_selectedAvatar],
-                        fit: BoxFit.cover,
-                      ),
+                      child: _customPhotoPath == null
+                          ? Image.asset(
+                              _avatars[_selectedAvatar],
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              File(_customPhotoPath!),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
                     child: GestureDetector(
-                      onTap: () {
-
-                      },
+                      onTap: _showPhotoOptions,
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
@@ -256,7 +343,10 @@ class _KidsProfileScreenState extends State<KidsProfileScreen>
                       children: List.generate(_avatars.length, (i) {
                         final selected = i == _selectedAvatar;
                         return GestureDetector(
-                          onTap: () => setState(() => _selectedAvatar = i),
+                          onTap: () => setState(() {
+                            _selectedAvatar = i;
+                            _customPhotoPath = null;
+                          }),
                           child: Stack(
                             children: [
                               Container(

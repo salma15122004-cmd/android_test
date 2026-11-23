@@ -51,6 +51,10 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Bright Steps needs camera access to take a child profile photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bright Steps needs photo library access to choose a child profile photo.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

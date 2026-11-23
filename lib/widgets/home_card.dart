@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 
 // بيانات الكارت الواحد
@@ -37,12 +38,7 @@ class HomeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              item.image,
-              width: 65,
-              height: 65,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(item.image, width: 65, height: 65, fit: BoxFit.contain),
             Padding(
               padding: const EdgeInsets.only(top: 17),
               child: Image.asset(
@@ -67,13 +63,8 @@ class HomeCard extends StatelessWidget {
     return Container(
       width: 56,
       height: 56,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: white,
-      ),
-      child: ClipOval(
-        child: Image.asset(item.image, fit: BoxFit.cover),
-      ),
+      decoration: const BoxDecoration(shape: BoxShape.circle, color: white),
+      child: ClipOval(child: Image.asset(item.image, fit: BoxFit.cover)),
     );
   }
 

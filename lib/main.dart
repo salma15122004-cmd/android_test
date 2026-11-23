@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'constants/app_colors.dart';
 import 'screens/splash_screen.dart';
+
 //import 'screens/home_screen.dart';
 void main() {
   runApp(const BrightStepsApp());
@@ -18,7 +20,7 @@ class BrightStepsApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.blue),
       ),
-      home: const SplashScreen (),
+      home: const SplashScreen(),
     );
   }
 }
