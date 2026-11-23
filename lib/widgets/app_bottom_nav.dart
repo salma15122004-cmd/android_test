@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 
 class AppBottomNav extends StatelessWidget {
@@ -33,9 +34,18 @@ class AppBottomNav extends StatelessWidget {
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.help_outline), label: 'Tips'),
-            BottomNavigationBarItem(icon: Icon(Icons.quiz_outlined), label: 'FAQ'),
-            BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.help_outline),
+              label: 'Tips',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.quiz_outlined),
+              label: 'FAQ',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              label: 'More',
+            ),
           ],
         ),
       ),

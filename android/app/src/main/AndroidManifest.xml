@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- usesCleartextTraffic allows plain http:// to the local XAMPP server.
+         Remove it when the backend is served over https. -->
     <application
+        android:usesCleartextTraffic="true"
         android:label="Bright Steps"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
