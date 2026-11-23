@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/home_card.dart';
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       title: "Child's Assessment",
       subtitle: "Easily assess your child's skills",
       image: 'assets_img/list.png',
-      secondimage:'assets_img/boy2.png',
+      secondimage: 'assets_img/boy2.png',
       color: lightGray,
     ),
   ];
@@ -63,12 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _items.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 1.05,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1.05,
+                        ),
                     itemBuilder: (_, i) => HomeCard(item: _items[i]),
                   ),
                   const SizedBox(height: 16),
@@ -77,10 +79,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      QuickLinkItem(icon: Icons.info_outline, label: 'About Us'),
+                      QuickLinkItem(
+                        icon: Icons.info_outline,
+                        label: 'About Us',
+                      ),
                       QuickLinkItem(icon: Icons.star, label: 'Favorites'),
-                      QuickLinkItem(icon: Icons.article, label: 'Useful Articles'),
-                      QuickLinkItem(icon: Icons.headset_mic, label: 'Contact Us'),
+                      QuickLinkItem(
+                        icon: Icons.article,
+                        label: 'Useful Articles',
+                      ),
+                      QuickLinkItem(
+                        icon: Icons.headset_mic,
+                        label: 'Contact Us',
+                      ),
                     ],
                   ),
                 ],
@@ -208,9 +219,15 @@ class _HomeBanner extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.horizontal(left: Radius.circular(24)),
-            child: Image.asset('assets_img/banner.png',
-                width: 120, height: 110, fit: BoxFit.cover),
+            borderRadius: const BorderRadius.horizontal(
+              left: Radius.circular(24),
+            ),
+            child: Image.asset(
+              'assets_img/banner.png',
+              width: 120,
+              height: 110,
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(width: 12),
           const Expanded(
