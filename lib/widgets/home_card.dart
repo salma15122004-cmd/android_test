@@ -31,19 +31,24 @@ class HomeCard extends StatelessWidget {
   Widget _buildImage() {
     if (item.secondimage != null) {
       return SizedBox(
-        height: 56,
+        height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: Image.asset(
-                item.image,
-                fit: BoxFit.contain,
-              ),
+            Image.asset(
+              item.image,
+              width: 65,
+              height: 65,
+              fit: BoxFit.contain,
             ),
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.only(top: 17),
               child: Image.asset(
                 item.secondimage!,
+                width: 42,
+                height: 42,
                 fit: BoxFit.contain,
               ),
             ),
